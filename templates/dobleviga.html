@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Análisis de Doble Viga en Voladizo</title>
+    <link rel="stylesheet" href="../../static/css/bootstrap.min.css" />
+    <script src="../../static/js/bootstrap.bundle.min.js"></script>
+    <script language="javascript">
+        function fetchData() {
+            document.getElementsByName('SolveStatus')[0].value = "Solución en Progreso";
+            let b = document.getElementById('SolveStatus');
+            b.classList.remove('bg-light');
+            b.classList.add('bg-danger');
+            b.style.color = 'white';
+        }
+    </script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="../static/images/download.jpeg" alt="" width="80" height="24" class="d-inline-block align-text-top">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Instalación</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Comandos MAPDL</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Ejemplos
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/escuadra">Escuadra de Esquina</a></li>
+                            <li><a class="dropdown-item" href="/cortador_de_torno">Cortador de Torno</a></li>
+                            <li><a class="dropdown-item" href="/dobleviga">Ensayo de Doble Viga en Voladizo</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container shadow-lg p-3 mb-5 bg-body-tertiary rounded">
+        <h1 class="mb-4 text-center">Análisis de Doble Viga en Voladizo</h1>
+        <p>Este ejemplo es un clásico ensayo de doble viga en voladizo comúnmente utilizado para estudiar la delaminación interfacial de modo I en placas compuestas.</p>
+        <div class="text-center">
+            <img
+            src="../static/images/double_cantilever.png"
+            alt="Double Cantilever Beam Image"
+            style="width: 350px"
+            />
+            <p class="text-secondary">
+                Referencia:
+                <a
+                  href="https://mapdl.docs.pyansys.com/version/stable/examples/gallery_examples/00-mapdl-examples/composite_dcb.html#sphx-glr-examples-gallery-examples-00-mapdl-examples-composite-dcb-py"
+                  class="text-decoration-none"
+                  target="_blank"
+                  >Simulación estática del ensayo de una viga en voladizo doble mediante elementos cohesivos</a
+                >
+              </p>
+        </div>
+        
+        <h3 class="mt-4">Objetivo</h3>
+        <p>Este ejemplo demuestra cómo utilizar PyMAPDL para simular la delaminación en materiales compuestos. También se utilizan módulos PyDPF para el postprocesamiento de los resultados.</p>
+        
+        <h3 class="mt-4">Procedimiento</h3>
+        <ol>
+            <li>Iniciar la instancia MAPDL.</li>
+            <li>Configurar el modelo.</li>
+            <li>Resolver el modelo.</li>
+            <li>Visualizar resultados usando PyMAPDL.</li>
+            <li>Plotear la fuerza de reacción.</li>
+        </ol>
+
+        <h3 class="mt-4">Paquetes adicionales</h3>
+        <p>Estos paquetes adicionales son importados para su uso:</p>
+        <ul>
+            <li>Matplotlib para graficar.</li>
+            <li>Pandas para análisis y manipulación de datos.</li>
+        </ul>
+
+        <div class="row">
+            <div class="col-md-3">
+                <h2 class="mt-4">ENTRADAS</h2>
+                <form onsubmit="fetchData()" method="POST">
+                    <div class="mb-3">
+                        <label for="length" class="form-label">Longitud (mm)</label>
+                        <input type="text" class="form-control" id="length" name="length" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="pre_crack" class="form-label">Longitud Pre-Fisura (mm)</label>
+                        <input type="text" class="form-control" id="pre_crack" name="pre_crack" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="width" class="form-label">Ancho (mm)</label>
+                        <input type="text" class="form-control" id="width" name="width" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="height" class="form-label">Altura (mm)</label>
+                        <input type="text" class="form-control" id="height" name="height" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="d" class="form-label">Desplazamiento (mm)</label>
+                        <input type="text" class="form-control" id="d" name="d" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Resolver</button>
+                </form>
+            </div>
+            <div class="col-md">
+              <h2 class="mt-4">SALIDAS</h2>
+              <div class="mb-3">
+                <label for="SolveStatus" class="form-label">Estado de la Solución</label>
+                {% if ForcevsDisplacement_image_url %}
+                <input type="text" class="form-control bg-success" id="SolveStatus" name="SolveStatus" readonly="readonly" value="Resuelto"/>
+                {% else %}
+                <input type="text" class="form-control bg-light" id="SolveStatus" name="SolveStatus" readonly="readonly" value=""/>
+                {% endif %}
+              </div>
+                <div class="Result-Image">
+                    {% if ForcevsDisplacement_image_url %}
+                    <h2>Resultado de Fuerza vs Desplazamiento</h2>
+                    <img
+                        src="{{ ForcevsDisplacement_image_url }}"
+                        alt="ForcevsDisplacement Image"
+                        style="width: 480px"
+                    />
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

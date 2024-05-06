@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css" />
+    <script src="../static/js/bootstrap.bundle.min.js"></script>
+    <title>FEA Learning Platform</title>
+  </head>
+  <body>
+
+    <nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/">
+          <img src="../static/images/download.jpeg" alt="" width="80" height="24" class="d-inline-block align-text-top">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/">Inicio</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Instalación</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Comandos MAPDL</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Ejemplos
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="/escuadra">Escuadra de Esquina</a></li>
+                <li><a class="dropdown-item" href="/cortador_de_torno">Cortador de Torno</a></li>
+                <li><a class="dropdown-item" href="/dobleviga">Ensayo de Doble Viga en Voladizo</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container shadow-lg p-3 mb-5 bg-body-tertiary rounded ">
+      <h1 class="text-center ">Bienvenidos a la Plataforma de Aprendizaje FEA</h1>
+      <p class="lead text-center">Explora el poder de Python y ANSYS para el análisis por elementos finitos.</p>
+      <img src="../static/images/sphx_glr_composite_dcb_006.gif" class="img-fluid rounded mx-auto d-block" height="200" width="400" alt="">
+
+      <section>
+        <h2>¿Qué es PyAnsys y PyMAPDL?</h2>
+        <p>PyAnsys es un conjunto de bibliotecas Python que proporciona una interfaz para interactuar con el software de simulación ANSYS, permitiendo a los usuarios automatizar tareas, acceder a capacidades de post-procesamiento y mucho más. PyMAPDL, específicamente, es una biblioteca que conecta Python con ANSYS Mechanical APDL, ofreciendo un acceso programático completo a todas las funcionalidades de MAPDL.</p>
+      </section>
+
+      <section>
+        <h2>Instalación</h2>
+        <p>Comienza tu viaje con PyAnsys y PyMAPDL con nuestra guía de instalación paso a paso. Asegúrate de cumplir con los requisitos previos y sigue las instrucciones detalladas para configurar tu entorno.</p>
+        <a href="#" class="btn btn-warning">Aprende a instalar</a>
+      </section>
+
+      <section>
+        <h2>Comenzando con PyMAPDL</h2>
+        <p>Descubre cómo utilizar PyMAPDL para crear y analizar modelos de elementos finitos. Desde la generación de mallas hasta la ejecución de simulaciones, aprende todo lo que necesitas saber para comenzar.</p>
+        <a href="#" class="btn btn-warning">Ver guía de comandos</a>
+      </section>
+
+      <section>
+        <h2>Ejemplos prácticos</h2>
+        <p>Aplica tus conocimientos con ejemplos prácticos que muestran el uso de PyMAPDL en escenarios reales. Cada ejemplo viene con código fuente completo y una explicación detallada de los procesos involucrados.</p>
+        <a href="#" class="btn btn-warning  ">Explorar ejemplos</a>
+      </section>
+    </div>
+
+  </body>
+</html>

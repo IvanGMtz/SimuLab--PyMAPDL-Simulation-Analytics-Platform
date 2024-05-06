@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Análisis Estático de un Soporte</title>
+    <link rel="stylesheet" href="../../static/css/bootstrap.min.css" />
+    <script src="../../static/js/bootstrap.bundle.min.js"></script>
+    <script language="javascript">
+      function fetchData() {
+        document.getElementsByName("SolveStatus")[0].value = "Solución en Progreso";
+        let b = document.getElementById("SolveStatus");
+        b.classList.remove("bg-light");
+        b.classList.add("bg-danger");
+        b.style.color = "white";
+      }
+    </script>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/">
+          <img
+            src="../static/images/download.jpeg"
+            alt=""
+            width="80"
+            height="24"
+            class="d-inline-block align-text-top"
+          />
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNavDropdown"
+          aria-controls="navbarNavDropdown"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/">Inicio</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Instalación</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Comandos MAPDL</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Ejemplos
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="/escuadra">Escuadra de Esquina</a></li>
+                <li><a class="dropdown-item" href="/cortador_de_torno">Cortador de Torno</a></li>
+                <li><a class="dropdown-item" href="/dobleviga">Ensayo de Doble Viga en Voladizo</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container shadow-lg p-3 mb-5 bg-body-tertiary rounded">
+      <h1 class="mb-4 text-center">Análisis Estático de un Soporte</h1>
+      <div class="row">
+        <div class="col-md-12 fw-light">
+          <p class="text-justify">
+            Esta es una análisis estructural estático simple de un paso de carga de un soporte de esquina. El orificio del perno superior izquierdo está restringido (soldado) alrededor de toda su circunferencia, y se aplica una carga de presión decreciente en la parte inferior del orificio del perno inferior derecho. Se utiliza el sistema de unidades estadounidense. El objetivo es demostrar cómo se utiliza típicamente Mechanical APDL en un análisis.
+          </p>
+          <h3>Modelo del Soporte</h3>
+          <p>
+            Las dimensiones del soporte de esquina se muestran en la figura siguiente. El soporte está hecho de acero A36 con un módulo de Young de 3*10^7 psi y un coeficiente de Poisson de 0.27.
+          </p>
+          <div class="text-center">
+            <img src="../static/images/Bracket.png" alt="Imagen del Modelo del Soporte" class="img-fluid" style="width: 480px">
+          </div>
+          <h3>Aproximación y suposiciones</h3>
+          <p>
+            Dado que el soporte es delgado en la dirección z (1/2 pulgada de espesor) en comparación con sus dimensiones en x e y, y dado que la carga de presión actúa solo en el plano x-y, se asume un estado de tensión plana para el análisis.
+          </p>
+          <p>
+            El enfoque es utilizar el modelado sólido para generar el modelo 2D y mallarlo automáticamente con nodos y elementos. Una alternativa sería crear los nodos y elementos directamente.
+          </p>
+        </div>
+      </div>
+
+      <div class="row align-items-start">
+        <div class="my-4 col-3">
+          <h2>ENTRADAS</h2>
+          <form onsubmit="fetchData()" method="POST">
+            <div class="mb-3">
+              <label for="box1" class="form-label">Coordenadas del Área 1 (x1, x2, y1, y2)</label>
+              <input type="text" class="form-control" id="box1" name="box1" required placeholder="0, 6, -1, 1"/>
+            </div>
+            <div class="mb-3">
+              <label for="box2" class="form-label">Coordenadas del Área 2 (x1, x2, y1, y2)</label>
+              <input type="text" class="form-control" id="box2" name="box2" required placeholder="4, 6, -1, -3"/>
+            </div>
+            <div class="mb-3">
+              <label for="pinhole_radius" class="form-label">Radio del Orificio (in)</label>
+              <input type="number" class="form-control" step="0.01" id="pinhole_radius" name="pinhole_radius" required/>
+            </div>
+            <div class="mb-3">
+              <label for="element_size" class="form-label">Tamaño del Elemento (in)</label>
+              <input type="number" class="form-control" step="0.01" id="element_size" name="element_size" required/>
+            </div>
+            <div class="mb-3">
+              <label for="pressure_load" class="form-label">Carga de Presión (psi) en los Orificios</label>
+              <input type="text" class="form-control" id="pressure_load" name="pressure_load" required placeholder="50, 500"/>
+            </div>
+            <button type="submit" class="btn btn-primary">Resolver</button>
+          </form>
+        </div>
+        <div class="my-4 col">
+          <h2>SALIDAS</h2>
+          <div class="mb-3">
+            <label for="SolveStatus" class="form-label">Estado de la Solución</label>
+            {% if deformation_image_url %}
+            <input type="text" class="form-control bg-success" id="SolveStatus" name="SolveStatus" readonly="readonly" value="Resuelto"/>
+            {% else %}
+            <input type="text" class="form-control bg-light" id="SolveStatus" name="SolveStatus" readonly="readonly" value=""/>
+            {% endif %}
+          </div>
+          <div class="Result-Image">
+            {% if deformation_image_url %}
+            <h2>Resultado de Deformación</h2>
+            <img src="{{ deformation_image_url }}" alt="Imagen de Deformación" style="width: 480px"/>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

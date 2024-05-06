@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis Estructural del Cortador de Torno</title>
+    <link rel="stylesheet" href="../../static/css/bootstrap.min.css">
+    <script src="../../static/js/bootstrap.bundle.min.js"></script>
+    <script language="javascript">
+      function fetchData() {
+        document.getElementsByName("SolveStatus")[0].value = "Solución en Progreso";
+        let b = document.getElementById("SolveStatus");
+        b.classList.remove("bg-light");
+        b.classList.add("bg-danger");
+        b.style.color = "white";
+      }
+    </script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="../static/images/download.jpeg" alt="" width="80" height="24" class="d-inline-block align-text-top">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Instalación</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Comandos MAPDL</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Ejemplos
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/escuadra">Escuadra de Esquina</a></li>
+                            <li><a class="dropdown-item" href="/cortador_de_torno">Cortador de Torno</a></li>
+                            <li><a class="dropdown-item" href="/dobleviga">Ensayo de Doble Viga en Voladizo</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container shadow-lg p-3 mb-5 bg-body-tertiary rounded">
+
+        <div class="row fw-light">
+            <h1 class="mb-4 text-center">Análisis Estructural del Cortador de Torno</h1>
+            <p>Este ejemplo tiene como objetivo destacar algunas de las características habitualmente utilizadas de PyMAPDL a través de un modelo de elemento finito de un cortador de torno. Los cortadores de torno tienen múltiples vías de desgaste y falla, y los análisis que respaldan su diseño suelen ser térmico-estructurales transitorios. Sin embargo, para simplificar, este ejemplo de simulación utiliza una carga no uniforme.</p>
+    
+            <div class="text-center">
+                <h4 class="mt-4">Geometría y descripción de la carga del cortador de torno</h4>
+                <img src="../static/images/lathe_cutter_model.png" alt="Geometría y Carga del Cortador de Torno" class="img-fluid" style="width: 550px;">
+            </div>
+            
+            <div>
+                <h3 class="mt-4">Contenidos</h3>
+                <ul>
+                    <li><strong>Variables y lanzamiento:</strong> Definir las variables necesarias y lanzar MAPDL.</li>
+                    <li><strong>Geometría, malla y parámetros de MAPDL:</strong> Importar geometría e inspeccionar parámetros de MAPDL. Definir el modelo de material elástico lineal con variables de Python. Malla y aplicar condiciones de contorno de simetría.</li>
+                    <li><strong>Sistema de coordenadas y carga:</strong> Crear un sistema de coordenadas local para la carga aplicada y verificar con un gráfico.</li>
+                    <li><strong>Carga de presión:</strong> Definir la carga de presión como una función seno de la longitud del área de aplicación usando arreglos de numpy. Importar el arreglo de presión a MAPDL como un arreglo de tabla. Verificar la carga aplicada y resolver.</li>
+                    <li><strong>Visualización de resultados:</strong> Mostrar visualización de resultados, visualización con selección y manejo de la leyenda del gráfico.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row">
+            <form onsubmit="fetchData()" method="POST">
+                <div class="row">
+                    <div class="col-md-3">
+                        <h2>ENTRADAS</h2>
+                        <div class="mb-3">
+                            <label for="EXX" class="form-label">Módulo de Young (psi)</label>
+                            <input type="number" class="form-control" id="EXX" name="EXX" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="NU" class="form-label">Coeficiente de Poisson</label>
+                            <input type="number" class="form-control" step="0.01" id="NU" name="NU" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="Fuerza" class="form-label">Fuerza aplicada (lbf)</label>
+                            <input type="number" class="form-control" id="Fuerza" name="Fuerza" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-4">Calcular</button>
+                    </div>
+                    <div class="col-md">
+                        <h2>SALIDAS</h2>
+                        <div class="mb-3">
+                            <label for="SolveStatus" class="form-label">Estado de la Solución</label>
+                            {% if load_image_url %}
+                            <input type="text" class="form-control bg-success" id="SolveStatus" name="SolveStatus" readonly="readonly" value="Resuelto"/>
+                            {% else %}
+                            <input type="text" class="form-control bg-light" id="SolveStatus" name="SolveStatus" readonly="readonly" value=""/>
+                            {% endif %}
+                        </div>
+                        <div id="result_images" class="mb-4 text-center">
+                            {% if load_image_url %}
+                                <div class="mb-3">
+                                    <h3>Gráfico de Carga Aplicada</h3>
+                                    <img src="{{ load_image_url }}" alt="Gráfico de Carga" class="img-fluid" style="width: 480px">
+                                </div>
+                            {% endif %}
+                            {% if stress_image_url %}
+                                <div class="mb-3">
+                                    <h3>Esfuerzo Principal</h3>
+                                    <img src="{{ stress_image_url }}" alt="Esfuerzo Principal" class="img-fluid" style="width: 480px">
+                                </div>
+                            {% endif %}
+                            {% if xy_stress_image_url %}
+                                <div class="mb-3">
+                                    <h3>Esfuerzo Principal en Plano XY</h3>
+                                    <img src="{{ xy_stress_image_url }}" alt="Esfuerzo Principal XY" class="img-fluid" style="width: 480px">
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>
